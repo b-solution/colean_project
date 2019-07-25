@@ -1,0 +1,54 @@
+{
+  "name": "syllable",
+  "version": "0.1.4",
+  "description": "Syllable count in an English word",
+  "license": "MIT",
+  "keywords": [
+    "detect",
+    "syllables",
+    "natural",
+    "language",
+    "cli",
+    "bin"
+  ],
+  "dependencies": {
+    "pluralize": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooorm/syllable.git"
+  },
+  "author": "Titus Wormer <tituswormer@gmail.com>",
+  "bin": {
+    "syllable": "cli.js"
+  },
+  "devDependencies": {
+    "eslint": "^0.20.0",
+    "istanbul": "^0.3.0",
+    "jscs": "^1.0.0",
+    "jscs-jsdoc": "^0.4.0",
+    "matcha": "^0.6.0",
+    "mdast": "^0.19.0",
+    "mdast-comment-config": "^0.1.0",
+    "mdast-github": "^0.2.0",
+    "mdast-toc": "^0.3.0",
+    "mdast-usage": "^0.2.0",
+    "mocha": "^2.0.0"
+  },
+  "scripts": {
+    "test-api": "_mocha --check-leaks test/index.js",
+    "test-cli": "bash ./test/cli.sh",
+    "test-coveralls": "istanbul cover _mocha --report lcovonly -- --check-leaks test/index.js",
+    "test-coverage": "istanbul cover _mocha -- --check-leaks test/index.js",
+    "test-travis": "npm run test-coveralls && npm run test-cli",
+    "test": "npm run test-api && npm run test-cli",
+    "lint-api": "eslint {index,cli,benchmark}.js test",
+    "lint-style": "jscs --reporter inline {index,cli,benchmark}.js test",
+    "lint": "npm run lint-api && npm run lint-style",
+    "build-md": "mdast . --output",
+    "make": "npm run lint && npm run test-coverage",
+    "build": "npm run build-md",
+    "install-benchmark": "npm install syllablistic text-statistics",
+    "benchmark": "matcha benchmark.js"
+  }
+}

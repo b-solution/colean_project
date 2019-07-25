@@ -1,0 +1,185 @@
+<script src="<%- app_home %>/vendor/postmessage/ender-postmessage.min.js"></script>
+<script src="<%- app_home %>/javascripts/summernote/summernote-ext.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<%- app_home %>/vendor/summernote/dist/summernote.css">
+<link rel="stylesheet" type="text/css" href="<%- app_home %>/stylesheets/summernote/summernote-overrides.css">
+
+<script type="text/javascript">
+
+  var summernoteEditorInit = function(){
+    var $summernoteEditor;
+    $summernoteEditor = $("[data-edit=summernote]");
+    if ($summernoteEditor.length) {
+      $summernoteEditor.each(function(i, el) {
+        var $el = $(el);
+        var embedSize = 'small';
+        if ($el.data("info")) {
+          embedSize = 'medium';
+        }
+        var height = '100px';
+        var options = {
+          height: height,
+          minHeight: '100px',
+          maxHeight: '100px',
+          focus: true,
+          disableLinkTarget: true,
+          disableLinkEmbed: false
+        };
+
+        if ($el.data("minimal")) {
+          var minimal = { toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'addTag']],
+            ['layout', ['ul', 'ol']]
+          ]};
+          options.height = '100px';
+          options.minHeight = '100px';
+          options.maxHeight = '100px';
+          options.focus = true;
+          options = $.extend(options, minimal);
+        } else if ($el.data("chat")) {
+          var chat = { toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'addTag']]
+          ],
+            focus: true,
+            shortcuts: false
+          };
+          options.height = '100px';
+          options.minHeight = '100px';
+          options.maxHeight = '100px';
+          options.dropUp = true;
+          options = $.extend(options, chat);
+        } else if ($el.data("info")) {
+          var infoOpts = { toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['layout', ['ul', 'ol']],
+            ['insert', ['embed', 'addTag', 'hr']],
+            ['misc', ['undo', 'redo', 'codeview']]
+          ]};
+          options.height = 200;
+          options.focus = true;
+          options = $.extend(options, infoOpts);
+        } else {
+          var miscToolbar = ['undo', 'redo', 'codeview'];
+          if ($el.data("fullscreen") != "no") {
+            miscToolbar.push('fullscreen');
+          }
+          var customToolbar = { toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'italic', 'underline', 'superscript', 'subscript', 'strikethrough', 'clear']],
+              ['fontname', ['fontname']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['height', ['height']],
+              ['table', ['table']],
+              ['insert', ['embed', 'addTag', 'hr']],
+              ['misc', miscToolbar],
+            ]};
+          options = $.extend(options, customToolbar);
+        }
+        $el.summernote(options);
+        $('.note-editable').css('height', '100px').css('max-height', '100px');
+        $('.note-editable').attr('x-webkit-speech', 'true');
+      });
+    }
+  }
+
+  var final_transcript = '';
+  var recognizing = false;
+  var ignore_onend;
+  var start_timestamp;
+  if (!('webkitSpeechRecognition' in window)) {
+    $('#div_start').hide();
+  } else {
+    $('#div_start').show();
+    var recognition = new webkitSpeechRecognition();
+    if (!recognition) {
+      $('#div_start').hide();
+    } else {
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = function() {
+        recognizing = true;
+        start_img.src = '/images/mic-animate.gif';
+      };
+
+      recognition.onerror = function(event) {
+        if (event.error == 'no-speech') {
+          start_img.src = '/images/mic.gif';
+          ignore_onend = true;
+        }
+        if (event.error == 'audio-capture') {
+          start_img.src = '/images/mic.gif';
+          ignore_onend = true;
+        }
+        if (event.error == 'not-allowed') {
+          if (event.timeStamp - start_timestamp < 100) {
+          } else {
+          }
+          ignore_onend = true;
+        }
+      };
+
+      recognition.onend = function() {
+        recognizing = false;
+        if (ignore_onend) {
+          return;
+        }
+        start_img.src = '/images/mic.gif';
+      };
+
+      recognition.onresult = function(event) {
+        var interim_transcript = '';
+        if (typeof(event.results) == 'undefined') {
+          recognition.onend = null;
+          recognition.stop();
+          return;
+        }
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            final_transcript += event.results[i][0].transcript;
+          } else {
+            interim_transcript += event.results[i][0].transcript;
+          }
+        }
+        final_transcript = capitalize(final_transcript);
+        var summernoteEditor = $("[data-edit=summernote]");
+        var existingText = summernoteEditor.code();
+        summernoteEditor.code(existingText + '' + linebreak(final_transcript));
+      };
+    }
+  }
+
+  var two_line = /\n\n/g;
+  var one_line = /\n/g;
+  function linebreak(s) {
+    return s.replace(two_line, '<p></p>').replace(one_line, '<br>') + '. ';
+  }
+
+  var first_char = /\S/;
+  function capitalize(s) {
+    return s.replace(first_char, function(m) { return m.toUpperCase(); });
+  }
+
+  function startButton(event) {
+    if (!recognition) {
+      $('#div_start').hide();
+      return;
+    }
+    if (recognizing) {
+      recognition.stop();
+      return;
+    }
+    final_transcript = '';
+    interim_transcript = '';
+    recognition.lang = 'en-US';
+    recognition.start();
+    ignore_onend = false;
+    start_img.src = '/images/mic-slash.gif';
+    start_timestamp = event.timeStamp;
+  }
+
+  $(function(){
+    summernoteEditorInit();
+  });
+
+</script>
