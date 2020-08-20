@@ -16,7 +16,7 @@
   "dependencies": {
     "acl": "git://github.com/colearnr/node_acl.git#0.4.8",
     "async": "1.5.2",
-    "bcrypt": "^3.0.2",
+    "bcrypt": "^5.0.0",
     "bitly": "4.1.1",
     "body-parser": "1.14.2",
     "cheerio": "0.20.0",
