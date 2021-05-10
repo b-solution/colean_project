@@ -38,7 +38,7 @@
     "helmet": "2.1.1",
     "hiredis": "0.1.17",
     "less-middleware": "2.1.0",
-    "lodash": "4.13.1",
+    "lodash": "4.17.21",
     "marked": "0.3.5",
     "moment": "2.11.0",
     "mongodb": "2.1.14",
