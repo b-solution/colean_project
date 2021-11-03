@@ -63,7 +63,7 @@
     "sitemap": "1.6.0",
     "socket.io": "git://github.com/colearnr/socket.io.git#0.9.19",
     "uglify-js": "2.6.1",
-    "validator": "5.4.0",
+    "validator": "13.7.0",
     "winston": "2.2.0"
   },
   "optionalDependencies": {
