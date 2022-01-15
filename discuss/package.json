@@ -39,7 +39,7 @@
     "hiredis": "0.1.17",
     "less-middleware": "2.1.0",
     "lodash": "4.13.1",
-    "marked": "0.3.5",
+    "marked": "4.0.10",
     "moment": "2.11.0",
     "mongodb": "2.1.14",
     "mongojs": "2.4.0",
