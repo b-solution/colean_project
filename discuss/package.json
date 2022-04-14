@@ -15,7 +15,7 @@
   "main": "app.js",
   "dependencies": {
     "acl": "git://github.com/colearnr/node_acl.git#0.4.8",
-    "async": "1.5.2",
+    "async": "3.2.2",
     "bcrypt": "^3.0.2",
     "bitly": "4.1.1",
     "body-parser": "1.14.2",
