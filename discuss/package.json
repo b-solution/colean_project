@@ -43,7 +43,7 @@
     "moment": "2.11.0",
     "mongodb": "2.1.14",
     "mongojs": "2.4.0",
-    "nconf": "0.8.2",
+    "nconf": "0.11.4",
     "node-imagemagick": "0.1.8",
     "nodebb-plugin-markdown": "5.1.6",
     "nodebb-plugin-mentions": "1.0.12",
